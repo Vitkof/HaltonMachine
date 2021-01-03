@@ -8,7 +8,7 @@ pmg.positive_y_is_up = False  # единая СК, II четверть(ЮВ)
 w, h = 700, 660
 fps = 60
 
-a, b, c, d = 2, 10, 20, 137
+a, b, c, d = 2, 8, 30, 137
 x1, x2, x3, x4 = a, w // 2 - b, w // 2 + b, w - a
 y1, y2, y3, y4 = 0, c, d - c, d
 L1, L2, L3, L4 = (x1, y1), (x1, y2), (x2, y3), (x2, y4)
@@ -16,11 +16,12 @@ R1, R2, R3, R4 = (x4, y1), (x4, y2), (x3, y3), (x3, y4)
 
 pygame.init()
 window = pygame.display.set_mode(size=(w, h))
+pygame.display.set_caption("Halton Board")
 timer = pygame.time.Clock()
 options = pmg.DrawOptions(window)
 
 space = pymunk.Space()  # область симуляции
-space.gravity = 0, 1666
+space.gravity = 0, 666
 
 
 def create_box(pos):
@@ -37,7 +38,7 @@ def create_box(pos):
 
 
 def create_ball(space, pos):
-    ball_mass, ball_radius = 10, 3.5
+    ball_mass, ball_radius = 10, 3.2
     moment = pymunk.moment_for_circle(ball_mass, 0, ball_radius)
     body = pymunk.Body(ball_mass, moment)
     body.position = pos
@@ -45,7 +46,7 @@ def create_ball(space, pos):
     ball = pymunk.Circle(body, ball_radius)
     ball.color = [random.randrange(256) for i in range(4)]
     ball.elasticity = 0.1
-    ball.friction = 0.4
+    ball.friction = 0.2
     space.add(body, ball)
     return body
 
@@ -53,7 +54,7 @@ def create_ball(space, pos):
 def create_stick(A, B):
     stick = pymunk.Segment(space.static_body, A, B, 4)
     stick.elasticity = 0.2
-    stick.friction = 0.5
+    stick.friction = 0.2
     return space.add(stick)
 
 def create_broken(*args):
@@ -62,8 +63,8 @@ def create_broken(*args):
 
 def create_peg(x, y, color):
     peg = pymunk.Circle(space.static_body, radius=3, offset=(x, y))
-    peg.elasticity = 0.0
-    peg.friction = 0.0
+    peg.elasticity = 0.1
+    peg.friction = 0.8
     peg.color = color
     return space.add(peg)
 def create_triangle_Pascal(space, lin):
@@ -95,7 +96,7 @@ create_broken(R1, R2, R3, R4, (w, h-120-60))
 
 floor = pymunk.Segment(space.static_body, (0, h), (w, h), 10)
 floor.elasticity = 0.1
-floor.friction = 0.5
+floor.friction = 0.9
 
 # poly = pymunk.Poly.create_box(body)
 # space.add(body, poly)
@@ -115,7 +116,7 @@ while True:
             if i.button == 1:
                 create_ball(space, i.pos)
     x += 1
-    if x % 5 == 0:
+    if x % 20 == 0:
         balls.append(create_ball(space, (random.randint(x1, x4), random.randint(y1, y2))))
         x = 0
 
